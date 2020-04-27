@@ -1,11 +1,5 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
+struct TreeNode *last_node;
+
 struct Node {
     int val;
     struct Node *next;
@@ -25,31 +19,33 @@ struct Node *init_list(int *arr, int sz)
     return ret;
 }
 
-void free_list(struct Node *list)
+int pop_list(struct Node **list)
 {
     struct Node *buf;
-    while (list) {
-        buf = list;
-        list = list->next;
-        free (buf);
-    }
-    buf = NULL;
+    int ret;
+    buf = *list;
+    *list = buf->next;
+    ret = buf->val;
+    free (buf);
+    return ret;
 }
 
-struct TreeNode* build_left(struct Node **pre, struct Node **in)
+struct TreeNode *build_left(struct Node **pre, struct Node **in)
 {
     struct TreeNode *ret;
     ret = malloc (sizeof(struct TreeNode));
-    ret->val = (*pre)->val;
+    ret->val = pop_list (pre);
     ret->left = NULL;
     ret->right = NULL;
-    (*pre) = (*pre)->next;
-    if (ret->val != (*in)->val) {
+    if (*pre && ret->val != (*in)->val) {
         ret->left = build_left (pre, in);
-        if (ret->val != (*in)->val) {
-            ret->right = build_left (pre, in);
+        while (ret->val != (*in)->val) {
+            // build right
+            last_node->right = build_left (pre, in);
         }
     }
+    pop_list (in);
+    last_node = ret;
     return ret;
 }
 
@@ -58,16 +54,17 @@ struct TreeNode* buildTree(int* pre, int pre_sz, int* in, int in_sz)
     struct TreeNode *ret;
     struct Node *pre_list;
     struct Node *in_list;
-    struct Node *pre_ptr;
-    struct Node *in_ptr;
+    if (pre_sz == 0)
+        return NULL;
     
+    last_node = NULL;
     pre_list = init_list (pre, pre_sz);
     in_list = init_list (in, in_sz);
-    pre_ptr = pre_list;
-    in_ptr = in_list;
-    
-    ret = build_left (&pre_ptr, &in_ptr);
 
-    free_list (pre_list);
-    free_list (in_list);
+    ret = build_left (&pre_list, &in_list);
+    while (pre_list && in_list) {
+        last_node->right = build_left (&pre_list, &in_list);
+    }
+    
+    return ret;
 }
