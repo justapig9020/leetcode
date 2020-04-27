@@ -30,21 +30,23 @@ int pop_list(struct Node **list)
     return ret;
 }
 
-struct TreeNode *build_left(struct Node **pre, struct Node **in)
+struct TreeNode *new_sub(struct Node **pre, struct Node **in)
 {
     struct TreeNode *ret;
     ret = malloc (sizeof(struct TreeNode));
     ret->val = pop_list (pre);
     ret->left = NULL;
     ret->right = NULL;
-    if (*pre && ret->val != (*in)->val) {
-        ret->left = build_left (pre, in);
+
+    if (ret->val != (*in)->val) {
+        ret->left = new_sub (pre, in);
         while (ret->val != (*in)->val) {
             // build right
-            last_node->right = build_left (pre, in);
+            last_node->right = new_sub (pre, in);
         }
     }
     pop_list (in);
+
     last_node = ret;
     return ret;
 }
@@ -56,15 +58,15 @@ struct TreeNode* buildTree(int* pre, int pre_sz, int* in, int in_sz)
     struct Node *in_list;
     if (pre_sz == 0)
         return NULL;
-    
+
     last_node = NULL;
     pre_list = init_list (pre, pre_sz);
     in_list = init_list (in, in_sz);
 
-    ret = build_left (&pre_list, &in_list);
-    while (pre_list && in_list) {
-        last_node->right = build_left (&pre_list, &in_list);
+    ret = new_sub (&pre_list, &in_list); // root and its left sub-tree
+    while (pre_list && in_list) { // root's right sub-tree
+        last_node->right = new_sub (&pre_list, &in_list);
     }
-    
+
     return ret;
 }
