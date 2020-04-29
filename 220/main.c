@@ -17,7 +17,7 @@ struct ListNode {
     struct ListNode *next;
 };
 
-struct TreeNode *new_node(struct TreeNode *par, int val)
+inline struct TreeNode *new_tnode(struct TreeNode *par, int val)
 {
     struct TreeNode *ret;
     ret = malloc (sizeof(struct TreeNode));
@@ -28,21 +28,7 @@ struct TreeNode *new_node(struct TreeNode *par, int val)
     return ret;
 }
 
-struct TreeNode *insert_node (struct TreeNode **pos, struct TreeNode *par, int val)
-{
-    if (!(*pos)) {
-        (*pos) = new_node (par, val);
-        return *pos;
-    }
-
-    if ((*pos)->val < val) {
-        return insert_node (&((*pos)->right), *pos, val);
-    } else {
-        return insert_node (&((*pos)->left), *pos, val);
-    }
-}
-
-struct List *new_liat()
+inline struct List *new_list()
 {
     struct List *ret;
     ret = malloc (sizeof(struct List));
@@ -53,7 +39,55 @@ struct List *new_liat()
     return ret;
 }
 
-void inset_list (struct )
+inline struct ListNode *new_lnode(struct TreeNode *cont)
+{
+    struct ListNode *ret;
+    ret = malloc (sizeof(struct ListNode));
+    ret->cont = cont;
+    ret->next = NULL:
+}
+
+struct TreeNode *insert_tree(struct TreeNode **pos, struct TreeNode *par, int val)
+{
+    if (!(*pos)) {
+        (*pos) = new_tnode (par, val);
+        return *pos;
+    }
+
+    if ((*pos)->val < val) {
+        return insert_tree (&((*pos)->right), *pos, val);
+    } else {
+        return insert_tree (&((*pos)->left), *pos, val);
+    }
+}
+
+void insert_list(struct List *list, struct TreeNode * tnode)
+{
+    struct ListNode *n_lnode;
+    n_lnode = new_lnode(tnode);
+
+    if (!(list->head)) { // new list
+        list->head = n_lnode;
+        list->tail = n_lnode;
+    } else {
+        list->tail->next = n_lnode;
+        list->tail = n_lnode;
+    }
+    list->size++;
+}
+
+void inset_val(struct List *list, int val)
+{
+    struct TreeNode *n_tnode;
+    n_tnode = insert_tnode (&(list->root), NULL, val);
+    insert_list (list, n_tnode);
+}
+
+void rm_tnode(struct )
+void rm_last(struct List *list)
+{
+
+}
 
 // arr[i] - arr[j] => t
 // i - j => k
