@@ -1,5 +1,5 @@
 struct TreeNode {
-    struct TreeNode *parent;
+    struct TreeNode **parent;
     struct TreeNode *left;
     struct TreeNode *right;
     int val;
@@ -17,7 +17,7 @@ struct ListNode {
     struct ListNode *next;
 };
 
-inline struct TreeNode *new_tnode(struct TreeNode *par, int val)
+inline struct TreeNode *new_tnode(struct TreeNode **par, int val)
 {
     struct TreeNode *ret;
     ret = malloc (sizeof(struct TreeNode));
@@ -47,17 +47,17 @@ inline struct ListNode *new_lnode(struct TreeNode *cont)
     ret->next = NULL:
 }
 
-struct TreeNode *insert_tree(struct TreeNode **pos, struct TreeNode *par, int val)
+struct TreeNode *insert_tree(struct TreeNode **pos, int val)
 {
     if (!(*pos)) {
-        (*pos) = new_tnode (par, val);
+        (*pos) = new_tnode (pos, val);
         return *pos;
     }
 
     if ((*pos)->val < val) {
-        return insert_tree (&((*pos)->right), *pos, val);
+        return insert_tree (&((*pos)->right), val);
     } else {
-        return insert_tree (&((*pos)->left), *pos, val);
+        return insert_tree (&((*pos)->left), val);
     }
 }
 
@@ -79,11 +79,14 @@ void insert_list(struct List *list, struct TreeNode * tnode)
 void inset_val(struct List *list, int val)
 {
     struct TreeNode *n_tnode;
-    n_tnode = insert_tnode (&(list->root), NULL, val);
+    n_tnode = insert_tnode (&(list->root), val);
     insert_list (list, n_tnode);
 }
 
-void rm_tnode(struct )
+void rm_tnode(struct TreeNode *)
+{
+}
+
 void rm_last(struct List *list)
 {
 
